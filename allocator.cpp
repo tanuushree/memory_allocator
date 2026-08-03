@@ -15,6 +15,11 @@ void* allocator(size_t size) {
             allocated_list.push_back(allocated_block);
             it->start = it->start+size;
             it->size = it->size - size;
+            //if the free block is completely used up, remove it from the free list
+            // this avoids dereferencing a free block with size 0 in future allocations
+            if(it->size == 0){
+                free_list.erase(it);
+            }
             return allocated_block.start;
         }
     }
